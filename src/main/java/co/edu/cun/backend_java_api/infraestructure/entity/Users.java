@@ -2,6 +2,8 @@ package co.edu.cun.backend_java_api.infraestructure.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
 
@@ -25,5 +27,13 @@ public class Users {
 
     @Column(name = "birthdate")
     private Date birthdate;
+
+    @CreationTimestamp
+    @Column(name = "create_at")
+    private Date createAt;
+
+    @UpdateTimestamp
+    @Column(name = "update_at")
+    private Date updateAt;
 
 }
