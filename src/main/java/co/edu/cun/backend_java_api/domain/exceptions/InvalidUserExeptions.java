@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @AllArgsConstructor
 @NoArgsConstructor
 @ResponseStatus(HttpStatus.CONFLICT)
-public class InvalidProductExeptions extends RuntimeException {
+public class InvalidUserExeptions extends RuntimeException {
     private String message;
     private int code;
     private HttpStatus http;

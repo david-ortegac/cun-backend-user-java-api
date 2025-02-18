@@ -2,8 +2,6 @@ package co.edu.cun.backend_java_api.adapter.restful.v1.rest;
 
 import co.edu.cun.backend_java_api.application.service.UserService;
 import co.edu.cun.backend_java_api.infraestructure.entity.Users;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,9 +13,6 @@ import java.util.List;
 @RequestMapping("/api/v1/users")
 public class Restful implements UserService {
 
-    @Autowired
-    private UserService userService;
-
     @Override
     @GetMapping("/")
     public List<Users> getAllUsers() {
@@ -27,7 +22,7 @@ public class Restful implements UserService {
 
     @Override
     @GetMapping("/{id}")
-    public ResponseEntity<Users> getUserById(@PathVariable Long id) {
+    public Users getUserById(@PathVariable Long id) {
         //return ResponseEntity.ok(userService.getUserById(id));
         return null;
     }

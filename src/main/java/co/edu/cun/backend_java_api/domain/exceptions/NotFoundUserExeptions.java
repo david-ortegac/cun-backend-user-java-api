@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @AllArgsConstructor
 @NoArgsConstructor
 @ResponseStatus(HttpStatus.NOT_FOUND)
-public class NotFoundProductExeptions extends RuntimeException {
+public class NotFoundUserExeptions extends RuntimeException {
     private String message;
     private int code;
     private HttpStatus http;
