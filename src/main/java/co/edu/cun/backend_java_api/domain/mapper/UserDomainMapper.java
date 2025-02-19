@@ -1,5 +1,6 @@
 package co.edu.cun.backend_java_api.domain.mapper;
 
+import co.edu.cun.backend_java_api.adapter.restful.v1.models.UserAdapter;
 import co.edu.cun.backend_java_api.domain.entities.UserDomainDto;
 import co.edu.cun.backend_java_api.infraestructure.entity.Users;
 import org.mapstruct.Mapper;
@@ -14,4 +15,7 @@ public interface UserDomainMapper {
 
     Users toEntity(UserDomainDto userDomainDto);
     List<Users> toEntityList(List<UserDomainDto> userDomainDtoList);
+
+    UserDomainDto toUserDomainDtoFromAdapter(UserAdapter userAdapter);
+    UserAdapter toUserAdapterFromDomain(UserDomainDto userDomainDto);
 }

@@ -6,14 +6,11 @@ import co.edu.cun.backend_java_api.application.service.UserService;
 import co.edu.cun.backend_java_api.infraestructure.entity.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -26,6 +23,9 @@ public class Restful {
         this.userService = userService;
     }
 
+    @Autowired
+    private AdapterMapper mapper;
+
     @GetMapping
     public ResponseEntity<List<Users>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
@@ -34,18 +34,20 @@ public class Restful {
     @GetMapping("/{id}")
     public ResponseEntity<Users> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserById(id));
-        //return null;
     }
 
-    public Users saveUser(UserAdapter users) {
-        return null;
+    @PostMapping
+    public ResponseEntity<Users> saveUser(@RequestBody UserAdapter usersAdapter) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.saveUser(usersAdapter));
     }
 
-    public void deleteUser(Long id) {
-
+    @PatchMapping("/{id}")
+    public ResponseEntity<Users> updateUser(@RequestBody UserAdapter usersAdapter, @PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.updateUser(usersAdapter, id));
     }
 
-    public Users updateUser(UserAdapter users) {
-        return null;
+    @DeleteMapping("/{id}")
+    public ResponseEntity<UserAdapter> deleteUser(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.deleteUser(id));
     }
 }

@@ -5,6 +5,7 @@ import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -13,7 +14,7 @@ import java.util.Date;
 public class Users {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "Id")
     private Long id;
 
     @Column(name = "name")
@@ -26,14 +27,14 @@ public class Users {
     private String password;
 
     @Column(name = "birthdate")
-    private Date birthdate;
+    private LocalDateTime birthdate;
 
     @CreationTimestamp
-    @Column(name = "create_at")
-    private Date createAt;
+    @Column(name = "create_at", nullable=true, updatable = false)
+    private LocalDateTime createAt;
 
     @UpdateTimestamp
-    @Column(name = "update_at")
-    private Date updateAt;
+    @Column(name = "update_at", nullable = true)
+    private LocalDateTime updateAt;
 
 }

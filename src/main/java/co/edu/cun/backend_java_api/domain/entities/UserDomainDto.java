@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.internal.build.AllowNonPortable;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -14,7 +15,7 @@ public class UserDomainDto {
     private String name;
     private String email;
     private String password;
-    private String birthdate;
-    private Date createAt;
-    private Date updateAt;
+    private LocalDateTime birthdate;
+    private LocalDateTime createAt;
+    private LocalDateTime updateAt;
 }
