@@ -19,7 +19,7 @@ public class Restful {
     private final UserService userService;
 
     @Autowired
-    public Restful(UserService userService) {
+    public Restful(@Qualifier("userServiceImp") UserService userService) {
         this.userService = userService;
     }
 

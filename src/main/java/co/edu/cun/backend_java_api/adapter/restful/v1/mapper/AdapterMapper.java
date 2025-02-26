@@ -8,6 +8,7 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface AdapterMapper {
+
     UserAdapter toUserAdapter(UserDomainDto userDomainDto);
     List<UserAdapter> toUserAdapterList(List<UserDomainDto> domainDtoList);
 
