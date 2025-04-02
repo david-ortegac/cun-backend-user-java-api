@@ -8,6 +8,7 @@ import co.edu.cun.backend_java_api.domain.utils.Message;
 import co.edu.cun.backend_java_api.infraestructure.crud.UserCrud;
 import co.edu.cun.backend_java_api.infraestructure.entity.Users;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -21,14 +22,11 @@ import java.util.Optional;
 @Slf4j
 class UserServiceImp implements UserService {
 
+    @Autowired
     private UserCrud crud;
 
+    @Autowired
     private UserDomainMapper mapper;
-
-    public UserServiceImp(UserCrud crud, @Qualifier("userDomainMapper") UserDomainMapper mapper) {
-        this. crud    = crud;
-        this.mapper = mapper;
-    }
 
     @Override
     public List<UserDomainDto> getAllUsers() {
@@ -49,6 +47,7 @@ class UserServiceImp implements UserService {
     @Override
     public UserDomainDto updateUser(UserDomainDto userDomainDto, Long id) {
         if(crud.getUserById(id).isPresent()) {
+            userDomainDto.setId(id);
             return mapper.toUserDomainDto(crud.saveUser(mapper.toEntity(userDomainDto)));
         }else{
             throw new NotFoundUserExeptions(Message.NOT_FOUND_USER, HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND);

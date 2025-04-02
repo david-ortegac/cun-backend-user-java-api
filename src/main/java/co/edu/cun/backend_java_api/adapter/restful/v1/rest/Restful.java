@@ -5,6 +5,7 @@ import co.edu.cun.backend_java_api.adapter.restful.v1.models.UserAdapterDto;
 import co.edu.cun.backend_java_api.application.service.UserService;
 import co.edu.cun.backend_java_api.domain.entities.UserDomainDto;
 import co.edu.cun.backend_java_api.infraestructure.entity.Users;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,14 +18,11 @@ import java.util.List;
 
 public class Restful {
 
-    private final UserService userService;
+    @Autowired
+    private UserService userService;
 
-    private final AdapterMapper mapper;
-
-    public Restful(UserService userService, @Qualifier("adapterMapper") AdapterMapper mapper) {
-        this.userService = userService;
-        this.mapper = mapper;
-    }
+    @Autowired
+    private AdapterMapper mapper;
 
     @GetMapping
     public ResponseEntity<List<UserAdapterDto>> getAllUsers() {
