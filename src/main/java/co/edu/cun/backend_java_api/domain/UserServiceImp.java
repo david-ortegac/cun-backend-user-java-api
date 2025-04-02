@@ -1,85 +1,65 @@
 package co.edu.cun.backend_java_api.domain;
 
-import co.edu.cun.backend_java_api.adapter.restful.v1.models.UserAdapter;
 import co.edu.cun.backend_java_api.application.service.UserService;
+import co.edu.cun.backend_java_api.domain.entities.UserDomainDto;
 import co.edu.cun.backend_java_api.domain.exceptions.NotFoundUserExeptions;
 import co.edu.cun.backend_java_api.domain.mapper.UserDomainMapper;
 import co.edu.cun.backend_java_api.domain.utils.Message;
+import co.edu.cun.backend_java_api.infraestructure.crud.UserCrud;
 import co.edu.cun.backend_java_api.infraestructure.entity.Users;
-import co.edu.cun.backend_java_api.infraestructure.repositories.UserRespository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @Slf4j
-public class UserServiceImp implements UserService {
+class UserServiceImp implements UserService {
 
-    @Autowired
-    private UserRespository repository;
+    private UserCrud crud;
 
-    @Autowired
     private UserDomainMapper mapper;
 
-    @Transactional(readOnly = true)
-    @Override
-    public List<Users> getAllUsers() {
-        return mapper.toEntityList(mapper.toUserDomainDtoList(repository.findAll()));
+    public UserServiceImp(UserCrud crud, @Qualifier("userDomainMapper") UserDomainMapper mapper) {
+        this. crud    = crud;
+        this.mapper = mapper;
     }
 
-    @Transactional(readOnly = true)
     @Override
-    public Users getUserById(Long id) {
+    public List<UserDomainDto> getAllUsers() {
+        return mapper.toUserDomainDtoList(crud.getAllUsers());
+    }
+
+    @Override
+    public UserDomainDto getUserById(Long id) {
         log.info("Buscar el id: {}", id.toString());
-        Users optionalUsers = repository.findById(id).orElseThrow(() -> new NotFoundUserExeptions(Message.NOT_FOUND_USER, HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND));
-        return mapper.toEntity(mapper.toUserDomainDto(optionalUsers));
+        return mapper.toUserDomainDto(crud.getUserById(id).orElseThrow(() -> new NotFoundUserExeptions(Message.NOT_FOUND_USER, HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND)));
     }
 
     @Override
-    @Transactional
-    public Users saveUser(UserAdapter usersAdapter) {
-        return repository.save(mapper.toEntity(mapper.toUserDomainDtoFromAdapter(usersAdapter)));
+    public UserDomainDto saveUser(UserDomainDto userDomainDto) {
+        return  mapper.toUserDomainDto(crud.saveUser(mapper.toEntity(userDomainDto)));
     }
 
     @Override
-    public Users updateUser(UserAdapter usersAdapter, Long id) {
-        Users saved = repository.findById(id).orElseThrow(() -> new NotFoundUserExeptions(Message.NOT_FOUND_USER, HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND));
-        Users toUpdate = new Users();
-        toUpdate.setId(id);
-        if(!Objects.equals(saved.getName(), toUpdate.getName())){
-            toUpdate.setName(usersAdapter.getName());
+    public UserDomainDto updateUser(UserDomainDto userDomainDto, Long id) {
+        if(crud.getUserById(id).isPresent()) {
+            return mapper.toUserDomainDto(crud.saveUser(mapper.toEntity(userDomainDto)));
         }else{
-            toUpdate.setName(saved.getName());
+            throw new NotFoundUserExeptions(Message.NOT_FOUND_USER, HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND);
         }
-        if(!Objects.equals(saved.getEmail(), toUpdate.getEmail())){
-            toUpdate.setEmail(usersAdapter.getEmail());
-        }else{
-            toUpdate.setEmail(saved.getEmail());
-        }
-        if (!Objects.equals(saved.getPassword(), toUpdate.getPassword())){
-            toUpdate.setPassword(usersAdapter.getPassword());
-        }else{
-            toUpdate.setPassword(saved.getPassword());
-        }
-        if(!Objects.equals(saved.getBirthdate(), toUpdate.getBirthdate())){
-            toUpdate.setBirthdate(usersAdapter.getBirthdate());
-        }else{
-            toUpdate.setBirthdate(saved.getBirthdate());
-        }
-
-        return repository.save(toUpdate);
     }
 
     @Override
-    public UserAdapter deleteUser(Long id) {
+    public UserDomainDto deleteUser(Long id) {
         log.info("Borrar el id: {}", id.toString());
-        Users users = repository.findById(id).orElseThrow(() -> new NotFoundUserExeptions(Message.NOT_FOUND_USER, HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND));
-        repository.deleteById(id);
-        return mapper.toUserAdapterFromDomain(mapper.toUserDomainDto(users));
+        Users user = crud.getUserById(id).orElseThrow(() -> new NotFoundUserExeptions(Message.NOT_FOUND_USER, HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND));
+        crud.deleteUser(id);
+        return mapper.toUserDomainDto(user);
     }
 }
