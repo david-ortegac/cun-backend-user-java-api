@@ -9,6 +9,7 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface UserDomainMapper {
+    
     UserDomainDto toUserDomainDto(Users users);
     List<UserDomainDto> toUserDomainDtoList(List<Users> users);
 
